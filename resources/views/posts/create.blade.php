@@ -4,32 +4,44 @@
 @section('content')
 
 <div class="card card-default">
-	<div class="card-header">Create Post</div>
+	<div class="card-header">
+	{{ isset($post) ? 'Edit Post' : 'Create Post'}}
+	</div>
 
 	<div class="card-body">
-		<form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+		<form action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST" enctype="multipart/form-data">
 			@csrf
+			
+			@if(isset($post))
+				@method('PUT')
+			@endif
 
 			<div class="form-group">
 				<label for="title">Title</label>
-				<input type="text" id="title" name="title" class="form-control">
+				<input type="text" id="title" name="title" class="form-control" value="{{ isset($post) ? $post->title : '' }}">
 			</div>
 
 			<div class="form-group">
 				<label for="description">Description</label>
-				<textarea name="description" id="description" cols="5" rows="5" class="form-control"></textarea>
+				<textarea name="description" id="description" cols="5" rows="5" class="form-control">{{ isset($post) ? $post->description : '' }}</textarea>
 			</div>
 
 			<div class="form-group">
 				<label for="content">Content</label>
-				<input type="hidden" id="content" name="content">
+				<input type="hidden" id="content" name="content" value="{{ isset($post) ? $post->content : '' }}">
 				<trix-editor input="content"></trix-editor>
 			</div>
 
 			<div class="form-group">
 				<label for="published_at">Published at</label>
-				<input type="text" id="published_at" name="published_at" class="form-control">
+				<input type="text" id="published_at" name="published_at" class="form-control" value="{{ isset($post) ? $post->published_at : '' }}">
 			</div>
+
+			@if(isset($post))
+				<div class="form-group">
+					<img src="{{ asset("storage/" .$post->image) }}" alt="post image" class="img-fluid">
+				</div>
+			@endif
 
 			<div class="form-group">
 				<label for="image">Image</label>
@@ -37,7 +49,11 @@
 			</div>
 
 			<div class="form-group">
-				<button class="btn btn-success" type="submit">Create Post</button>
+				@if(isset($post))
+					<button class="btn btn-success" type="submit">Update Post</button>
+				@else
+					<button class="btn btn-success" type="submit">Create Post</button>
+				@endif
 			</div>
 			
 
