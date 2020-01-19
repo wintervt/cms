@@ -12,7 +12,11 @@ class Post extends Model
 {
 	use SoftDeletes;
 
-    protected $fillable = ['title', 'description', 'content', 'image', 'published_at','category_id'];
+    protected $dates = [
+        'published_at'
+    ];
+
+    protected $fillable = ['title', 'description', 'content', 'image', 'published_at','category_id', 'user_id'];
 
 
     public function deleteImage()
@@ -28,6 +32,27 @@ class Post extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+     public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('published_at', '<=', now());
+    }
+
+    public function scopeSearched($query)
+    {
+        $search = request()->query('search');
+
+        if(!$search) {
+            return $query->published();
+        }
+
+        return $query->where('title', 'LIKE', "%{$search}%");
     }
 
     /**

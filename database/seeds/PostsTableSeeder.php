@@ -4,6 +4,7 @@ use App\Post;
 use App\Category;
 use App\Tag;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class PostsTableSeeder extends Seeder
 {
@@ -19,6 +20,18 @@ class PostsTableSeeder extends Seeder
             'name' => 'News'
         ]);
 
+        $author1 = App\User::create([
+            'name' => 'John Doe',
+            'email' => 'john.doe@gmail.com',
+            'password' => Hash::make('password')
+        ]);
+
+         $author2 = App\User::create([
+            'name' => 'Jane Doe',
+            'email' => 'jane.doe@gmail.com',
+            'password' => Hash::make('password')
+        ]);
+
         $category2 = Category::create([
             'name' => 'Marketing'
         ]);
@@ -32,11 +45,12 @@ class PostsTableSeeder extends Seeder
             'description' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet',
             'content' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet',
             'category_id' => $category1->id,
-            'image' => 'posts/6.jpg'
+            'image' => 'posts/6.jpg',
+            'user_id' => $author1->id
 
         ]);
 
-        $post2 = Post::create([
+        $post2 = $author2->posts()->create([
             'title' => 'Lorem ipsum dolor sit amet 2',
             'description' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet 2',
             'content' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet 2',
@@ -44,7 +58,7 @@ class PostsTableSeeder extends Seeder
              'image' => 'posts/7.jpg'
         ]);
 
-        $post3 = Post::create([
+        $post3 = $author1->posts()->create([
             'title' => 'Lorem ipsum dolor sit amet 3',
             'description' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet 3',
             'content' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet 3',
@@ -52,7 +66,7 @@ class PostsTableSeeder extends Seeder
              'image' => 'posts/8.jpg'
         ]);
 
-        $post4 = Post::create([
+        $post4 = $author2->posts()->create([
             'title' => 'Lorem ipsum dolor sit amet 4',
             'description' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet 4',
             'content' => 'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet 4',
